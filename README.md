@@ -1,4 +1,4 @@
-# SolidForms-FreeCAD
+# SolidForms
 
 A collection of FreeCAD Python scripts for constructing geometric figures, starting with a cube made of hollow spheres. Each script generates a 3D model of a specific shape using parametric geometry, allowing for customization and export to STL for 3D printing.
 
