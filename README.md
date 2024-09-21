@@ -1,10 +1,10 @@
 # SolidForms
 
-A collection of FreeCAD Python scripts for constructing geometric figures, starting with a cube made of hollow spheres. Each script generates a 3D model of a specific shape using parametric geometry, allowing for customization and export to STL for 3D printing.
+A collection of FreeCAD Python scripts for constructing geometric figures. Each script generates a 3D model of a specific shape using parametric geometry, allowing for customization and export to STL for 3D printing.
 
 ## Features
 
-- **SpherifiedCube.py**: Generates a cube composed of overlapping hollow spheres, connected by cylinders.
+- **spherified_cube.py**: Generates a cube composed of overlapping hollow spheres, connected by cylinders.
   - Configurable sphere radius, cylinder radius, wall thickness, and cylinder shortening.
   - Exports directly to STL format for easy 3D printing.
 - More shapes and scripts coming soon!
@@ -26,7 +26,7 @@ A collection of FreeCAD Python scripts for constructing geometric figures, start
 
 ## Example Usage
 ```bash
-python SpherifiedCube.py
+python spherified_cube.py
 ```
 
 This will create a 3x3x3 grid of hollow spheres connected by cylinders. The output is an STL file ready for 3D printing.
