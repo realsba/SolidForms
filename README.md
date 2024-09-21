@@ -6,7 +6,9 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 
 - **spherified_cube.py**: Generates a cube composed of overlapping hollow spheres, connected by cylinders.
   - Configurable sphere radius, cylinder radius, wall thickness, and cylinder shortening.
-  - Exports directly to STL format for easy 3D printing.
+- **grid_cube.py**: Generates a grid cube structure made of rods, with spheres at each corner.
+  - Customizable cube size and rod radius.  
+- Exports directly to STL format for easy 3D printing.
 - More shapes and scripts coming soon!
 
 ## Dependencies

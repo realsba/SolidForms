@@ -75,6 +75,7 @@ def export_to_png(file_path):
     view.saveImage(file_path, 1000, 1000, "")
     print(f"Exported to {file_path}")
 
+# Main execution
 shapes = create_structure()
 
 export_to_stl(shapes)
