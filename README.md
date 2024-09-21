@@ -25,7 +25,7 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/SolidForms.git
+    git clone https://github.com/realsba/SolidForms.git
     ```
 2. Open any .py script in FreeCAD's Python console or run it directly from the FreeCAD environment.
 3. Modify parameters such as sphere radius, wall thickness, etc., inside the script to customize the model.
