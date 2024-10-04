@@ -1,5 +1,6 @@
 import os
-import FreeCAD, Part, Mesh, MeshPart
+import FreeCAD, Part
+import utils
 
 # Parameters
 size = 30                       # Cube size in mm
@@ -55,34 +56,10 @@ def create_structure():
 
     return shapes
 
-
-def export_to_stl(shapes):
-    mesh = Mesh.Mesh()
-    for shape in shapes:
-        mesh.addMesh(MeshPart.meshFromShape(Shape=shape, LinearDeflection=0.1, AngularDeflection=0.1))
-    mesh.write(stl_file_path)
-    print(f"Exported to {stl_file_path}")
-
-
-def show_isometric_view():
-    FreeCAD.ActiveDocument.recompute()
-    view = FreeCAD.Gui.activeDocument().activeView()
-    view.viewIsometric()
-    view.fitAll()
-    FreeCAD.Gui.updateGui()
-
-
-def export_to_png(file_path):
-    view = FreeCAD.Gui.activeDocument().activeView()
-    view.saveImage(file_path, 1000, 1000, "")
-    print(f"Exported to {file_path}")
-
-
 # Main execution
 shapes = create_structure()
 
-export_to_stl(shapes)
+utils.export_to_stl(shapes, stl_file_path)
 
-show_isometric_view()
-
-export_to_png(png_file_path)
+if 'Gui' in dir(FreeCAD):
+    utils.export_to_png(png_file_path)

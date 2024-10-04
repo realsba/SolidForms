@@ -1,8 +1,7 @@
 import os
-import FreeCAD
-import Part, Mesh, MeshPart
+import FreeCAD, Part
 from FreeCAD import Vector
-from utils import export_to_png
+import utils
 
 sphere_radius = 20
 cylinder_radius = 9
@@ -14,7 +13,6 @@ sphere = outer_sphere.cut(inner_sphere)
 
 stl_file_path = os.path.expanduser("~/Sphere2.stl")
 png_file_path = os.path.expanduser("~/Sphere2.png")
-
 
 holes = []
 
@@ -48,9 +46,7 @@ for hole in holes:
 
 Part.show(sphere)
 
-mesh = Mesh.Mesh()
-mesh.addMesh(MeshPart.meshFromShape(Shape=sphere, LinearDeflection=0.1, AngularDeflection=0.1))
-mesh.write(stl_file_path)
+utils.export_to_stl([sphere], stl_file_path)
 
 if 'Gui' in dir(FreeCAD):
-    export_to_png(png_file_path)
+    utils.export_to_png(png_file_path)
