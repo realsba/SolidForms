@@ -3,23 +3,41 @@ import FreeCAD, Part
 import utils
 
 # Parameters
-sphere_radius = 10              # Outer radius of spheres
-cylinder_radius = 1
-wall_thickness = 0.75           # Thickness of the hollow sphere walls
+sphere_radius = 15              # Outer radius of spheres
+rod_radius = 1.5
+reinforcement_radius = 5
+wall_thickness = 0.8            # Thickness of the hollow sphere walls
 overlap_radius = 0.1            # Additional radius for sphere overlap
-cylinder_shorten = 0.25         # Shortening length for cylinders (from both ends)
 distance = sphere_radius * 2    # Distance between sphere centers
-dimension = 3                   # Default dimension (3x3x3)
+dimension = 2
 cube_size = distance * dimension
 
 # Export paths
 stl_file_path = os.path.expanduser("~/SpherifiedCube.stl")
 png_file_path = os.path.expanduser("~/SpherifiedCube.png")
 
-doc = FreeCAD.ActiveDocument
+
+def create_hollow_sphere(radius, center, wall_thickness):
+    """Create a hollow sphere at the given center."""
+    outer_sphere = Part.makeSphere(radius, center)
+    inner_sphere = Part.makeSphere(radius - wall_thickness, center)
+    return outer_sphere.cut(inner_sphere)
+
+
+def create_rod(radius, height, point, direction, wall_thickness):
+    """Create a rod at the given point in the specified direction."""
+    outer_cylinder = Part.makeCylinder(radius, height, point, direction)
+    inner_cylinder = Part.makeCylinder(radius - wall_thickness, height, point, direction)
+    reinforcement_sphere1 = create_hollow_sphere(reinforcement_radius, point, wall_thickness)
+    end_point = point + direction.normalize() * height
+    reinforcement_sphere2 = create_hollow_sphere(reinforcement_radius, end_point, wall_thickness)
+    return outer_cylinder.cut(inner_cylinder).fuse(reinforcement_sphere1).fuse(reinforcement_sphere2)
+
 
 def create_structure():
-    shapes = []  # Store both hollow spheres and cylinders for later SVG export
+    shapes = []
+    sphere_centers = []
+
     for x in range(dimension):
         for y in range(dimension):
             for z in range(dimension):
@@ -28,33 +46,52 @@ def create_structure():
                     y * distance + sphere_radius,
                     z * distance + sphere_radius
                 )
-                outer_sphere = Part.makeSphere(sphere_radius + overlap_radius, sphere_center)
-                inner_sphere = Part.makeSphere(sphere_radius + overlap_radius - wall_thickness, sphere_center)
-                hollow_sphere = outer_sphere.cut(inner_sphere)
-                Part.show(hollow_sphere)
-                shapes.append(hollow_sphere)
+                sphere_centers.append(sphere_center)
 
-    for x in range(dimension):
-        for y in range(dimension):
-            # Bottom face (z = 0)
-            point_bottom = FreeCAD.Vector(x * distance + sphere_radius, y * distance + sphere_radius, cylinder_shorten)
-            cylinder_bottom = Part.makeCylinder(cylinder_radius, cube_size - 2 * cylinder_shorten, point_bottom, FreeCAD.Vector(0, 0, 1))
-            Part.show(cylinder_bottom)
-            shapes.append(cylinder_bottom)
+    for sphere_center in sphere_centers:
+        hollow_sphere = create_hollow_sphere(sphere_radius + overlap_radius, sphere_center, wall_thickness)
+        reinforcement_sphere = create_hollow_sphere(reinforcement_radius, sphere_center, wall_thickness)
+        combined_sphere = hollow_sphere.fuse(reinforcement_sphere)
 
-            # Front face (y = 0)
-            point_front = FreeCAD.Vector(x * distance + sphere_radius, cylinder_shorten, y * distance + sphere_radius)
-            cylinder_front = Part.makeCylinder(cylinder_radius, cube_size - 2 * cylinder_shorten, point_front, FreeCAD.Vector(0, 1, 0))
-            Part.show(cylinder_front)
-            shapes.append(cylinder_front)
+        Part.show(reinforcement_sphere)
+        Part.show(combined_sphere)
+        shapes.append(combined_sphere)
 
-            # Left face (x = 0)
-            point_left = FreeCAD.Vector(cylinder_shorten, x * distance + sphere_radius, y * distance + sphere_radius)
-            cylinder_left = Part.makeCylinder(cylinder_radius, cube_size - 2 * cylinder_shorten, point_left, FreeCAD.Vector(1, 0, 0))
-            Part.show(cylinder_left)
-            shapes.append(cylinder_left)
+    # Directions for rods and corresponding positions using tuples as keys
+    directions = [
+        (0, 0, 1),  # Z direction (bottom face)
+        (0, 1, 0),  # Y direction (front face)
+        (1, 0, 0)  # X direction (left face)
+    ]
+
+    positions = {
+        (0, 0, 1): lambda i, j: FreeCAD.Vector(i * distance + sphere_radius, j * distance + sphere_radius, 0),
+        (0, 1, 0): lambda i, j: FreeCAD.Vector(i * distance + sphere_radius, 0, j * distance + sphere_radius),
+        (1, 0, 0): lambda i, j: FreeCAD.Vector(0, i * distance + sphere_radius, j * distance + sphere_radius),
+    }
+
+    for i in range(dimension):
+        for j in range(dimension):
+            for d in directions:
+                point = positions[d](i, j)
+                rod = create_rod(rod_radius, cube_size, point, FreeCAD.Vector(*d), wall_thickness)
+
+                start_point = point + FreeCAD.Vector(*d).normalize() * sphere_radius
+                end_point = point + FreeCAD.Vector(*d).normalize() * (cube_size - sphere_radius)
+                solid_sphere1 = Part.makeSphere(sphere_radius, start_point)
+                solid_sphere2 = Part.makeSphere(sphere_radius, end_point)
+                cylinder_length = (end_point - start_point).Length
+                solid_cylinder = Part.makeCylinder(sphere_radius, cylinder_length, start_point,
+                                                   FreeCAD.Vector(*d).normalize())
+                shape = solid_sphere1.fuse(solid_sphere2).fuse(solid_cylinder)
+
+                rod = rod.common(shape)
+
+                Part.show(rod)
+                shapes.append(rod)
 
     return shapes
+
 
 # Main execution
 shapes = create_structure()
