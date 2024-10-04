@@ -5,6 +5,8 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 <p float="left">
   <img src="media/SpherifiedCube.png" width="45%" />
   <img src="media/GridCube.png" width="45%" />
+  <img src="media/Sphere1.png" width="45%" />
+  <img src="media/Sphere2.png" width="45%" />
 </p>
 
 ## Features
@@ -12,7 +14,12 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 - **spherified_cube.py**: Generates a cube composed of overlapping hollow spheres, connected by cylinders.
   - Configurable sphere radius, cylinder radius, wall thickness, and cylinder shortening.
 - **grid_cube.py**: Generates a grid cube structure made of rods, with spheres at each corner.
-  - Customizable cube size and rod radius.  
+  - Customizable cube size and rod radius.
+- **sphere1.py**: Represents a hollow sphere with eight cylindrical holes directed toward the vertices of a cube.
+  - The cylinders are subtracted to create hollow channels running through the sphere, radiating from the center to the surface.
+- **sphere2.py** Features a hollow sphere with twelve cylindrical holes arranged along diagonal planes. 
+  - The holes are positioned symmetrically along the three axes, creating a network of channels cutting through the sphere. 
+  - The holes pass through the sphere in directions such as (1,1,0), (1,0,1), and (0,1,1), connecting opposite sides.
 - Exports directly to STL format for easy 3D printing.
 - More shapes and scripts coming soon!
 
@@ -33,7 +40,10 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 
 ## Example Usage
 ```bash
-python spherified_cube.py
+freecad-python3 spherified_cube.py
+```
+```bash
+freecadcmd-python3 spherified_cube.py
 ```
 
 This will create a 3x3x3 grid of hollow spheres connected by cylinders. The output is an STL file ready for 3D printing.
