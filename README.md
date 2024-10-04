@@ -7,6 +7,7 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
   <img src="media/GridCube.png" width="45%" />
   <img src="media/Sphere1.png" width="45%" />
   <img src="media/Sphere2.png" width="45%" />
+  <img src="media/DimpledSphere.png" width="45%" />
 </p>
 
 ## Features
@@ -17,15 +18,16 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
   - Customizable cube size and rod radius.
 - **sphere1.py**: Represents a hollow sphere with eight cylindrical holes directed toward the vertices of a cube.
   - The cylinders are subtracted to create hollow channels running through the sphere, radiating from the center to the surface.
-- **sphere2.py** Features a hollow sphere with twelve cylindrical holes arranged along diagonal planes. 
+- **sphere2.py**: Features a hollow sphere with twelve cylindrical holes arranged along diagonal planes. 
   - The holes are positioned symmetrically along the three axes, creating a network of channels cutting through the sphere. 
   - The holes pass through the sphere in directions such as (1,1,0), (1,0,1), and (0,1,1), connecting opposite sides.
+- **dimpled_sphere.py**: Represents a hollow sphere with eight smaller spheres indented into its surface, placed at positions corresponding to the vertices of a cube.
 - Exports directly to STL format for easy 3D printing.
 - More shapes and scripts coming soon!
 
 ## Dependencies
 
-- **FreeCAD 0.22** (or later)
+- **FreeCAD 0.21** (or later)
 - Python 3.x
 
 ## Getting Started
@@ -39,12 +41,15 @@ A collection of FreeCAD Python scripts for constructing geometric figures. Each 
 4. Export the generated model to STL for 3D printing.
 
 ## Example Usage
+To generate the 3D model and optionally export a PNG image, you can run one of the following commands depending on whether you are using the GUI or not:
 ```bash
 freecad-python3 spherified_cube.py
 ```
+This command runs the script in FreeCAD with the GUI, and it will automatically generate the 3D model in STL format and export a PNG image of the model.
 ```bash
 freecadcmd-python3 spherified_cube.py
 ```
+This command runs the script in a non-GUI (command line) mode, generating only the 3D model in STL format without exporting a PNG image.
 
 This will create a 3x3x3 grid of hollow spheres connected by cylinders. The output is an STL file ready for 3D printing.
 
